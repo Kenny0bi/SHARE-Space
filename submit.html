@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submit a Letter | SHARE Space</title>
+
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/tabs.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/submit.css" />
+</head>
+
+<body>
+  <!--Header -->
+  <header class="header">
+    <div class="header-left">
+      <a href="https://www.bmc.org/pediatrics-autism-program" target="_blank">
+        <img src="images/autismlogo.png" alt="Autism Logo" class="header-logo" />
+      </a>
+    </div>
+
+    <div class="header-middle">
+      <div class="header-center">
+        <h1 class="share-title">SHARE Space</h1>
+        <p class="share-subtitle">(Stories, Hope, and Real Experiences from the Autism Community at Boston Medical Center)</p>
+      </div>
+    </div>
+
+    <div class="floating-left">
+      <img src="images/himg1.png" alt="Floating Star" class="floating-icon" />
+    </div>
+
+    <div class="floating-right">
+      <img src="images/himg3.png" alt="Floating Puzzle" class="floating-icon" />
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs-header">
+    <div class="nav-tabs">
+      <button class="tab-button" onclick="location.href='index.html'">Welcome</button>
+      <button class="tab-button" onclick="location.href='read.html'">Read a Letter</button>
+      <button class="tab-button active" onclick="location.href='submit.html'">Submit a Letter</button>
+    </div>
+    <div class="admin-tab">
+      <button class="tab-button" onclick="location.href='login.html'">Admin Login</button>
+    </div>
+  </div>
+
+  <!-- Submit Section -->
+  <main class="submit-main">
+    <h2 class="submit-heading">Submit a Letter</h2>
+
+<div class="submit-wrapper">
+    <div class="submit-container">
+      <h3 class="option-title">Write directly on this page</h3>
+  
+      <div class="letter-guide">
+        💌 Not sure how to begin? That’s okay. Your words don’t have to be perfect — they just have to be real.
+        You can write a note to yourself, to someone you love, or even to a stranger who might need encouragement.
+        Start with “Dear You...” or “Today I’m feeling...” or simply share what’s on your heart. We’re here to listen.
+      </div>
+  
+      <div class="sample-highlight">
+        <strong>💡 Still don’t know where to begin?</strong><br />
+        <a href="#" id="toggleSampleLettersLink">Click here to view sample letters for inspiration</a>
+      </div>
+  
+      <div id="sampleLetters" class="sample-buttons" style="display: none;">
+        <button class="sample-letter-button" onclick="showSampleLetter('dearYou')">Dear You</button>
+        <button class="sample-letter-button" onclick="showSampleLetter('dearMe')">Dear Me</button>
+        <button class="sample-letter-button" onclick="showSampleLetter('futureFriend')">To a Future Friend</button>
+      </div>
+      
+  
+      <!-- Letter Form Starts -->
+      <form id="letterForm" class="letter-form" enctype="multipart/form-data">
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name" placeholder="Full name or just your First name..." required />
+
+        <label for="email">Email (optional)</label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" />
+      
+        <label for="category">I'm writing as a... *</label>
+        <select id="category" name="category" required>
+          <option value="" disabled selected>-- Select a category --</option>
+          <option value="parents">Parent</option>
+          <option value="siblings">Sibling</option>
+          <option value="autistic">Autistic Individual</option>
+          <option value="caregivers">Caregiver</option>
+          <option value="strangers">Stranger / Ally</option>
+        </select>
+      
+        <label for="title">Letter Title</label>
+        <input type="text" id="title" name="title" placeholder="e.g. To My Future Self" required />
+      
+        <label for="letter">Your Letter</label>
+        <textarea id="letter" name="letter" placeholder="Write your message here... No limit — as much as your heart wants.
+        " required></textarea>
+        
+
+      
+        <div class="consent-wrapper">
+          <label class="consent-label">
+            <input type="checkbox" id="consent" required />
+            <span>I consent to my letter being shared anonymously on this platform.</span>
+          </label>
+        </div>
+      
+        <button type="submit">Submit Letter</button>
+        <p id="thankYouMessage" class="thank-you"></p>
+      </form>      
+  
+      <!-- Contact Box -->
+      <div class="contact-helper-box">
+        <p><strong>Still have questions?</strong><br/>
+          Reach out to <a href="mailto:juju.ha@bmc.org">Juju Ha</a> or <a href="mailto:katherine.shields@bmc.org">Katie Shields</a>.
+        </p>
+      </div>
+    </div> 
+  
+    <!-- Floating Prompt Bubbles (inside submit-wrapper but OUTSIDE submit-container) -->
+    <div class="floating-prompts-wrapper">
+      <!-- Left side prompts -->
+      <div class="floating-prompt left" id="prompt1">What made you smile this week?</div>
+      <div class="floating-prompt left" id="prompt2">What’s something you wish people knew about autism?</div>
+      <div class="floating-prompt left" id="prompt3">What moment made you proud recently?</div>
+      <div class="floating-prompt left" id="prompt4">What helps you feel safe?</div>
+  
+      <!-- Right side prompts -->
+      <div class="floating-prompt right" id="prompt5">What’s one thing you’ve learned from your brother/sister?</div>
+      <div class="floating-prompt right" id="prompt6">What does kindness mean to you?</div>
+      <div class="floating-prompt right" id="prompt7">What are you grateful for today?</div>
+      <div class="floating-prompt right" id="prompt8">What would you want to say to someone who’s struggling right now?</div>
+    </div>
+  </div> 
+  
+  </main>
+  
+
+  <!--Footer -->
+  <footer class="footer">
+    <a href="https://www.bmc.org/pediatrics-autism-program" target="_blank">
+      <img src="images/autismlogo.png" alt="Boston Medical Logo" class="footer-logo" />
+    </a>
+  </footer>
+ <!-- Main Scripts (Firebase + Modal Handling) -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiGubyr9VF9dZlx37uN_-4r_yhOx_twYE",
+      authDomain: "share-space-c22c9.firebaseapp.com",
+      databaseURL: "https://share-space-c22c9-default-rtdb.firebaseio.com/",
+      projectId: "share-space-c22c9",
+      storageBucket: "share-space-c22c9.appspot.com",
+      messagingSenderId: "592722668334",
+      appId: "1:592722668334:web:9acbd3378349cd79fce8bf"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('letterForm');
+      const thankYouMessage = document.getElementById('thankYouMessage');
+  
+      if (!form) {
+        console.error("Form not found!");
+        return;
+      }
+  
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+  
+        const name = form.name.value.trim();
+        const email = form.email.value.trim();
+        const category = form.category.value;
+        const title = form.title.value.trim();
+        const letter = form.letter.value.trim();
+        const consent = form.consent.checked;
+        const fileInput = form.querySelector('#fileUpload');
+        const file = fileInput ? fileInput.files[0] : null;
+  
+        if (!consent) {
+          alert("You must consent before submitting.");
+          return;
+        }
+  
+        if (!category || !title || !letter) {
+          alert("Please fill out all required fields.");
+          return;
+        }
+  
+        let fileURL = "";
+  
+        if (file) {
+          const allowedTypes = ['image/jpeg', 'image/png'];
+          const maxSize = 25 * 1024 * 1024;
+  
+          if (!allowedTypes.includes(file.type)) {
+            alert("Only JPG and PNG images are allowed.");
+            return;
+          }
+  
+          if (file.size > maxSize) {
+            alert("Image size should not exceed 25MB.");
+            return;
+          }
+  
+          try {
+            const filePath = `attachments/${Date.now()}_${file.name}`;
+            const storageReference = storageRef(storage, filePath);
+            const snapshot = await uploadBytes(storageReference, file);
+            fileURL = await getDownloadURL(snapshot.ref);
+          } catch (uploadError) {
+            console.error("Image upload failed:", uploadError);
+            alert("There was an issue uploading your image. Please try again.");
+            return;
+          }
+        }
+  
+        try {
+          const newLetterRef = push(ref(db, `letters/${category}`));
+          const now = new Date();
+          const dateString = now.toLocaleString('en-US', {
+            month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
+          });
+          const timestamp = now.getTime();
+  
+          await set(newLetterRef, {
+            name: name || "Anonymous",
+            email: email || "",
+            category,
+            title,
+            letter,
+            consent,
+            imageUrl: fileURL || "",
+            approved: false,
+            date: dateString,
+            timestamp: timestamp
+          });
+  
+          Swal.fire({
+            icon: 'success',
+            title: 'Thank you!',
+            text: 'Your letter has been submitted and is awaiting review.',
+            confirmButtonColor: '#623666',
+            timer: 3000,
+            timerProgressBar: true,
+          }).then(() => {
+            window.location.href = 'submit.html';
+          });
+  
+          emailjs.send("service_xelf99i", "template_3nl5ohu", {
+            title: title,
+            category: category,
+            date: dateString
+          }).then(() => {
+            console.log("Email notification sent successfully!");
+          }).catch((error) => {
+            console.error("Failed to send email:", error);
+          });
+  
+        } catch (error) {
+          console.error("Submission error:", error);
+          alert("There was an error submitting your letter. Please try again.");
+        }
+      });
+  
+      // Modal Logic
+      const modalOverlay = document.getElementById('letterModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalLetter = document.getElementById('modalLetter');
+      const closeModalBtn = document.getElementById('modalCloseButton');
+  
+      window.showSampleLetter = function (type) {
+        let title = '';
+        let body = '';
+  
+        if (type === 'dearYou') {
+  title = 'Dear You';
+  body = `
+    <p>Dear You,</p>
+    <p>I don’t know if you realize how much you’ve done for me — or how much it meant to be seen by you, really seen. In a world that often misunderstood me, your kindness never asked me to shrink or explain myself. You didn’t treat me like a diagnosis or a checklist. You treated me like a person — whole, complex, and worthy.</p>
+    <p>I still think about the day you sat beside me and didn’t say anything when I was overstimulated. You didn’t try to fix it. You just stayed. You let silence be safe. That moment, quiet as it was, screamed louder than anything: <em>I’m here. You’re not alone.</em></p>
+    <p>I’ve learned that sometimes we don’t need big gestures or loud affirmations. We need someone to stand in the small spaces with us. And you did. Thank you for showing me that I wasn’t too much. Thank you for staying long enough for me to believe it too.</p>
+    <p>With all my heart,<br><strong>Someone you made feel whole again</strong></p>
+  `;
+} else if (type === 'dearMe') {
+  title = 'Dear Me';
+  body = `
+    <p>Dear Me,</p>
+    <p>There was a time you carried shame like skin. You tried to be quieter, easier, smaller — anything to not be noticed, anything to not be misunderstood. And when you couldn’t hold it in anymore, when you melted down or shut down, you’d lie awake afterward, blaming yourself.</p>
+    <p>I want to tell you now, with so much gentleness: you were never broken. You were never “too sensitive” or “too much” — you were responding to a world that didn’t know how to meet you where you were. You learned how to survive in a space not designed for your rhythm.</p>
+    <p>But look at you now — still here, still growing, still trying. That takes strength. That’s love in its fiercest form.</p>
+    <p>So I forgive you for the things you thought about yourself when you didn’t know better. I love you for trying. And I promise, from here forward, I will treat you with the softness you deserved all along.</p>
+    <p><strong>You are not a burden.<br>You are a miracle.</strong></p>
+    <p>With love,<br><strong>Me</strong></p>
+  `;
+} else if (type === 'futureFriend') {
+  title = 'To a Future Friend';
+  body = `
+    <p>To a future friend —</p>
+    <p>I don’t know your name yet. I don’t know what you love, what makes you laugh, or what kind of days wear you down. But I do know this: I already care about you.</p>
+    <p>Maybe you’ll understand parts of me others didn’t. Maybe you’ll have your own rhythm that makes me feel less alone in mine. Maybe we’ll sit beside each other, in silence or in joy, and just… get it.</p>
+    <p>I hope when we find each other, we won’t feel the need to explain everything. We’ll let each other exist fully — without pressure, without performance. I hope we share the kind of friendship where even hard days feel held.</p>
+    <p>Until then, I’ll be here, showing up as myself, hoping you’re out there doing the same. When we meet, we’ll know. And when we know, we’ll grow.</p>
+    <p>With quiet hope,<br><strong>Someone waiting with love</strong></p>
+  `;
+}
+
+  
+        modalTitle.innerText = title;
+        modalLetter.innerHTML = body;
+        modalOverlay.style.display = 'flex';
+      };
+  
+      closeModalBtn.addEventListener('click', () => {
+        modalOverlay.style.display = 'none';
+      });
+  
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          modalOverlay.style.display = 'none';
+        }
+      });
+  
+      document.querySelectorAll('.sample-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const type = button.getAttribute('data-type');
+          showSampleLetter(type);
+        });
+      });
+  
+      document.getElementById('toggleSampleLettersLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        const sampleSection = document.getElementById('sampleLetters');
+        sampleSection.style.display = (sampleSection.style.display === 'none' || sampleSection.style.display === '') ? 'block' : 'none';
+      });
+    });
+  
+    // Expandable Textarea
+    window.expandTextarea = function () {
+      const textarea = document.getElementById("letter");
+      const button = document.getElementById("expandBtn");
+  
+      if (textarea.classList.contains("expanded")) {
+        textarea.classList.remove("expanded");
+        button.textContent = "Expand Writing Area";
+      } else {
+        textarea.classList.add("expanded");
+        button.textContent = "🗙 Collapse Writing Area";
+      }
+    };
+  </script>
+  
+  <script src="js/submit.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init("nspX0erHRXrg15RxT");
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- Modal HTML (unchanged) -->
+  <div id="letterModal" class="modal-overlay" style="display: none;">
+    <div class="letter-modal" onclick="event.stopPropagation()">
+      <button class="modal-close" id="modalCloseButton">&times;</button>
+      <h2 id="modalTitle" class="modal-title">Sample Title</h2>
+      <div id="modalLetter" class="modal-body">Sample letter text will appear here.</div>
+      <div id="modalMeta" class="modal-meta"></div>
+    </div>
+  </div>
+  </body>
+  </html>
+  

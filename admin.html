@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | SHARE Space</title>
+
+  <!-- Import Shared Styles -->
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/tabs.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<div class="page-container"> 
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <a href="https://www.bmc.org/pediatrics-autism-program" target="_blank">
+        <img src="images/autismlogo.png" alt="Autism Logo" class="header-logo" />
+      </a>
+    </div>
+
+    <div class="header-middle">
+      <div class="header-center">
+        <h1 class="share-title">SHARE Space</h1>
+        <p class="share-subtitle">
+          (Stories, Hope, and Real Experiences from the Autism Community at Boston Medical Center)
+        </p>
+      </div>
+    </div>
+
+    <div class="floating-left">
+      <img src="images/himg1.png" alt="Floating Star" class="floating-icon" />
+    </div>
+
+    <div class="floating-right">
+      <img src="images/himg3.png" alt="Floating Puzzle" class="floating-icon" />
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs-header">
+    <div class="nav-tabs">
+      <button class="tab-button" onclick="location.href='index.html'">Welcome</button>
+      <button class="tab-button" onclick="location.href='read.html'">Read a Letter</button>
+      <button class="tab-button" onclick="location.href='submit.html'">Submit a Letter</button>
+    </div>
+
+    <div class="admin-tab">
+      <button class="tab-button" id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard Main Content -->
+  <main class="admin-main">
+    <div class="admin-heading-container">
+      <h2 class="admin-heading">Admin Dashboard</h2>
+    </div>
+
+    <div class="tab-buttons-container">
+      <button onclick="switchView('pending')" class="admin-tab-btn active-tab-btn">Pending Letters</button>
+      <button onclick="switchView('approved')" class="admin-tab-btn">Approved Letters</button>
+    </div>
+
+    <div class="bulk-actions">
+        <button onclick="approveSelected()" class="bulk-approve">Approve</button>
+        <button onclick="deleteSelected()" class="bulk-delete">Delete</button>
+      </div>
+      
+      
+    <!-- Pending Letters -->
+    <div id="pendingLetters" class="letter-section envelope-grid"></div>
+
+    <!-- Approved Letters -->
+    <div id="approvedLetters" class="letter-section" style="display:none;">
+      <div id="approvedParents" class="category-section">
+        <h3 class="category-title parents">Letters from Parents</h3>
+        <div class="envelope-grid"></div>
+      </div>
+      <div id="approvedSiblings" class="category-section">
+        <h3 class="category-title siblings">Letters from Siblings</h3>
+        <div class="envelope-grid"></div>
+      </div>
+      <div id="approvedAutistic" class="category-section">
+        <h3 class="category-title autistic">Letters from Autistic Individuals</h3>
+        <div class="envelope-grid"></div>
+      </div>
+      <div id="approvedCaregivers" class="category-section">
+        <h3 class="category-title caregivers">Letters from Caregivers</h3>
+        <div class="envelope-grid"></div>
+      </div>
+      <div id="approvedAllies" class="category-section">
+        <h3 class="category-title allies">Letters from Allies</h3>
+        <div class="envelope-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <a href="https://www.bmc.org/pediatrics-autism-program" target="_blank">
+        <img src="images/autismlogo.png" alt="Boston Medical Logo" class="footer-logo" />
+      </a>
+    </div>
+  </footer>
+
+</div> 
+
+<div id="confirmModal" class="modal hidden">
+  <div class="modal-content">
+    <span id="closeModal" class="close-button">&times;</span>
+    <p id="confirmText"></p>
+    <div class="modal-buttons">
+      <button id="confirmYes" class="modal-btn accept"></button>
+      <button id="confirmNo" class="modal-btn cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase & Admin Dashboard Logic -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiGubyr9VF9dZlx37uN_-4r_yhOx_twYE",
+      authDomain: "share-space-c22c9.firebaseapp.com",
+      databaseURL: "https://share-space-c22c9-default-rtdb.firebaseio.com/",
+      projectId: "share-space-c22c9",
+      storageBucket: "share-space-c22c9.appspot.com",
+      messagingSenderId: "592722668334",
+      appId: "1:592722668334:web:9acbd3378349cd79fce8bf"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    
+    // Containers
+    const pendingContainer = document.getElementById('pendingLetters');
+    const approvedParents = document.querySelector('#approvedParents .envelope-grid');
+    const approvedSiblings = document.querySelector('#approvedSiblings .envelope-grid');
+    const approvedAutistic = document.querySelector('#approvedAutistic .envelope-grid');
+    const approvedCaregivers = document.querySelector('#approvedCaregivers .envelope-grid');
+    const approvedAllies = document.querySelector('#approvedAllies .envelope-grid');
+    
+    // AUTH + ADMIN CHECK
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const adminRef = ref(db, `admins/${user.uid}`);
+        const adminSnap = await get(adminRef);
+    
+        if (adminSnap.exists()) {
+          console.log("✅ Admin verified.");
+          loadLetters(); 
+        } else {
+          alert("⛔ You are not authorized to view this page.");
+          window.location.href = "index.html";
+        }
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+    
+    // Fetch and render letters
+    function loadLetters() {
+      const lettersRef = ref(db, 'letters');
+    
+      onValue(lettersRef, (snapshot) => {
+        pendingContainer.innerHTML = '';
+        approvedParents.innerHTML = '';
+        approvedSiblings.innerHTML = '';
+        approvedAutistic.innerHTML = '';
+        approvedCaregivers.innerHTML = '';
+        approvedAllies.innerHTML = '';
+    
+        const allLetters = [];
+    
+        snapshot.forEach(categorySnap => {
+          const category = categorySnap.key;
+          categorySnap.forEach(letterSnap => {
+            const letter = letterSnap.val();
+            const key = letterSnap.key;
+    
+            allLetters.push({
+              ...letter,
+              key,
+              category,
+              timestamp: letter.timestamp || 0
+            });
+          });
+        });
+    
+        allLetters.sort((a, b) => b.timestamp - a.timestamp);
+    
+        allLetters.forEach(letter => {
+          const div = document.createElement('div');
+          div.className = 'envelope-card';
+    
+          if (!letter.approved) {
+            div.innerHTML = `
+              <input type="checkbox" class="select-letter" data-category="${letter.category}" data-key="${letter.key}" />
+              <img src="images/envelope-icon.png" alt="Envelope" class="envelope-image" />
+              <div class="envelope-title">${letter.title}</div>
+              <div class="envelope-meta">
+                <div><strong>From:</strong> ${letter.name || "Anonymous"}</div>
+                <div><strong>Category:</strong> ${letter.category}</div>
+                <div><strong>Date:</strong> ${letter.date}</div>
+              </div>
+            `;
+            div.onclick = (e) => {
+              if (e.target.tagName !== 'INPUT') {
+                showLetterModal(letter, letter.category, letter.key);
+              }
+            };
+            pendingContainer.appendChild(div);
+          } else {
+            div.innerHTML = `
+              <img src="images/envelope-icon.png" alt="Envelope" class="envelope-image" />
+              <div class="envelope-title">${letter.title}</div>
+            `;
+            div.onclick = () => {
+              showLetterModal(letter, letter.category, letter.key);
+            };
+    
+            if (letter.category === 'parents') approvedParents.appendChild(div);
+            else if (letter.category === 'siblings') approvedSiblings.appendChild(div);
+            else if (letter.category === 'autistic') approvedAutistic.appendChild(div);
+            else if (letter.category === 'caregivers') approvedCaregivers.appendChild(div);
+            else if (letter.category === 'strangers') approvedAllies.appendChild(div);
+          }
+        });
+      });
+    }
+    
+    // View toggling
+    window.switchView = function(view) {
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active-tab-btn'));
+      document.querySelector(`.admin-tab-btn[onclick*="${view}"]`).classList.add('active-tab-btn');
+    
+      pendingContainer.style.display = view === 'pending' ? 'grid' : 'none';
+      document.getElementById('approvedLetters').style.display = view === 'approved' ? 'block' : 'none';
+    };
+    
+    // Bulk operations
+    function getSelectedLetters() {
+      return Array.from(document.querySelectorAll('.select-letter:checked'))
+        .map(checkbox => ({
+          category: checkbox.dataset.category,
+          key: checkbox.dataset.key
+        }));
+    }
+    
+    window.acceptLetter = async function(category, key) {
+      await update(ref(db, `letters/${category}/${key}`), { approved: true });
+      alert('Letter approved successfully!');
+    };
+    
+    window.deleteLetter = async function(category, key) {
+      await remove(ref(db, `letters/${category}/${key}`));
+      alert('Letter deleted successfully.');
+    };
+    
+    window.approveSelected = async function () {
+      const selected = getSelectedLetters();
+      if (selected.length === 0) return alert("No letters selected.");
+      for (const { category, key } of selected) {
+        await update(ref(db, `letters/${category}/${key}`), { approved: true });
+      }
+      alert(`${selected.length} letter(s) approved successfully.`);
+    };
+    
+    window.deleteSelected = async function () {
+      const selected = getSelectedLetters();
+      if (selected.length === 0) return alert("No letters selected.");
+      if (confirm("Are you sure you want to delete the selected letters?")) {
+        for (const { category, key } of selected) {
+          await remove(ref(db, `letters/${category}/${key}`));
+        }
+        alert(`${selected.length} letter(s) deleted successfully.`);
+      }
+    };
+    
+    // Modal logic
+    function showLetterModal(letter, category, key) {
+      const modal = document.getElementById('confirmModal');
+      const confirmText = document.getElementById('confirmText');
+      const confirmYes = document.getElementById('confirmYes');
+    
+      confirmText.textContent =
+        `From: ${letter.name || 'Anonymous'}\n` +
+        `Category: ${category}\n` +
+        `Date: ${letter.date}\n\n` +
+        `${letter.letter}`;
+    
+      confirmYes.textContent = !letter.approved ? "Approve" : "Delete";
+      confirmYes.onclick = () => {
+        !letter.approved ? acceptLetter(category, key) : deleteLetter(category, key);
+        closeModal();
+      };
+    
+      modal.classList.remove('hidden');
+    }
+    
+    function closeModal() {
+      document.getElementById('confirmModal').classList.add('hidden');
+    }
+    
+    document.getElementById('closeModal').onclick = closeModal;
+    document.getElementById('confirmNo').onclick = closeModal;
+    document.getElementById('confirmModal').onclick = function (event) {
+      if (event.target.id === 'confirmModal') closeModal();
+    };
+    
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = 'index.html';
+      }).catch((error) => {
+        console.error('Logout failed:', error);
+      });
+    });
+    
+    // Auto logout
+    let inactivityTimer;
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        alert('⏳ You have been logged out due to inactivity.');
+        signOut(auth).then(() => {
+          window.location.href = 'index.html';
+        });
+      }, 5 * 60 * 1000);
+    }
+    window.onload = resetInactivityTimer;
+    document.onmousemove = resetInactivityTimer;
+    document.onkeydown = resetInactivityTimer;
+    document.onclick = resetInactivityTimer;
+    </script>
+    </body>
+</html>

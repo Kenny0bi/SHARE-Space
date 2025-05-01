@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login | SHARE Space</title>
+
+  <!-- Link your main styles -->
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/login.css" /> 
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="https://www.bmc.org/pediatrics-autism-program" target="_blank">
+        <img src="images/autismlogo.png" alt="Autism Logo" class="header-logo" />
+      </a>
+    </div>
+
+    <div class="header-middle">
+      <div class="header-center">
+        <h1 class="share-title">SHARE Space</h1>
+        <p class="share-subtitle">(Stories, Hope, and Real Experiences from the Autism Community at Boston Medical Center)</p>
+      </div>
+    </div>
+
+    <div class="floating-left">
+      <img src="images/himg1.png" alt="Floating Star" class="floating-icon" />
+    </div>
+
+    <div class="floating-right">
+      <img src="images/himg3.png" alt="Floating Puzzle" class="floating-icon" />
+    </div>
+  </header>
+
+  <!-- Main Login Section -->
+  <main class="login-main">
+    <div class="login-wrapper">
+      <h2 class="login-heading">Admin Login</h2>
+
+      <form id="loginForm" class="login-form" onsubmit="adminLogin(event)">
+        <input type="email" id="adminEmail" placeholder="Email" required />
+        <div class="password-field">
+            <input type="password" id="adminPassword" placeholder="Password" required />
+            <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+          </div>
+                    
+        <button type="submit">Login</button>
+        <div id="loginMessage" class="message"></div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <a href="https://www.bmc.org/pediatrics-autism-program" target="_blank">
+      <img src="images/autismlogo.png" alt="Boston Medical Logo" class="footer-logo" />
+    </a>
+  </footer>
+
+  <!-- Firebase Login Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiGubyr9VF9dZlx37uN_-4r_yhOx_twYE",
+      authDomain: "share-space-c22c9.firebaseapp.com",
+      projectId: "share-space-c22c9",
+      storageBucket: "share-space-c22c9.appspot.com",
+      messagingSenderId: "592722668334",
+      appId: "1:592722668334:web:9acbd3378349cd79fce8bf",
+      measurementId: "G-55CM6P3325"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.adminLogin = function (event) {
+      event.preventDefault();
+      const email = document.getElementById("adminEmail").value;
+      const password = document.getElementById("adminPassword").value;
+      const messageBox = document.getElementById("loginMessage");
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          messageBox.textContent = "Login successful! Redirecting...";
+          messageBox.className = "message success-message";
+          setTimeout(() => {
+            window.location.href = "admin.html"; 
+          }, 1500);
+        })
+        .catch((error) => {
+          messageBox.textContent = "Login failed. Please check your credentials.";
+          messageBox.className = "message error-message";
+        });
+    };
+  </script>
+  <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('adminPassword');
+  
+    togglePassword.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+  
+      // Toggle the icon
+      if (type === 'password') {
+        this.classList.remove('fa-eye-slash');
+        this.classList.add('fa-eye');
+      } else {
+        this.classList.remove('fa-eye');
+        this.classList.add('fa-eye-slash');
+      }
+    });
+  </script>  
+</body>
+</html>

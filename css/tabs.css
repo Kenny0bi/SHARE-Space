@@ -1,0 +1,101 @@
+.nav-tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-left: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .nav-tabs button {
+    background-color: #623666; 
+    color: white; 
+    border: none;
+    padding: 8px 18px;
+    font-size: 0.90rem;
+    font-weight: bold;
+    border-radius: 12px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Avenir', Arial, sans-serif;
+  }
+  
+  /* Hover effect */
+  .nav-tabs button:hover {
+    background-color: #7a4f7a; 
+  }
+  
+  .tabs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0rem;
+    padding-left: 0vw;
+    padding-right: 2vw;
+  }
+  
+  
+  .nav-tabs button,
+  .admin-tab .tab-button {
+    background-color: #623666;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    font-size: 0.90rem;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Avenir', Arial, sans-serif;
+    text-decoration: none; 
+    display: inline-block;
+    text-align: center;
+  }
+  
+  /* Hover effect */
+  .nav-tabs button:hover,
+  .admin-tab .tab-button:hover {
+    background-color: #8f6a8f;
+  }
+  
+  
+  /* MOBILE-FRIENDLY MEDIA QUERY */
+@media (max-width: 768px) {
+    .nav-tabs {
+      flex-wrap: wrap; 
+      gap: 0.3rem;
+      padding: 0rem;
+    }
+  
+    .tab-button {
+      font-size: 0.3rem; 
+      padding: -10px -5px; 
+      flex: 1 1 auto; 
+      min-width: 10px; 
+      text-align: center;
+    }
+  }
+  
+  /* EXTRA SMALL SCREENS */
+  @media (max-width: 480px) {
+    .tab-button {
+      font-size: 0.1rem;
+      padding: 10px 10px;
+      min-width: 50px;
+    }
+    .nav-tabs button {
+        padding: 5px 10px; 
+        font-size: 0.5rem; 
+      }
+  }
+
+  /* Media Query for Small Screens */
+@media (max-width: 768px) {
+    .nav-tabs button,
+    .admin-tab .tab-button { 
+      padding: 5px 10px;
+      font-size: 0.5rem;
+      border-radius: 9px;
+    }
+  }
+  

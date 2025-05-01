@@ -1,0 +1,197 @@
+/* Caregivers Main Section */
+.parents-main {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f9e9fc; 
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Section Heading ("Letters from Caregivers") */
+  .parents-heading {
+    font-family: 'Avenir', Arial, sans-serif;
+    font-size: 1.5rem;
+    color: #623666;
+    text-align: left;
+    margin-bottom: 2rem;
+    margin-top: 0.4rem;
+    padding-left: 0.1rem;
+  }
+  
+  /* Grid for Envelope Entries */
+  .letter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 2.5rem;
+    justify-items: center;
+    padding: 0 2rem 4rem; 
+  }
+  
+  /* Single Envelope Entry */
+  .envelope-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  /* Envelope Image */
+  .envelope-img {
+    width: 120px;
+    height: auto;
+    transition: transform 0.3s ease;
+    animation: floaty 2.2s ease-in-out infinite;
+  }
+  
+  /* Sender Name */
+  .sender-name {
+    margin-top: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #623666;
+  }
+  
+  /* Sent Date */
+  .sent-date {
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+    color: #777;
+    font-style: italic;
+  }
+  
+  /* Floating Animation */
+  @keyframes floaty {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+  
+  /* Responsive Tweaks for Tablets and Phones */
+  @media (max-width: 768px) {
+    .parents-heading {
+      font-size: 1.7rem;
+      padding-left: 1.2rem;
+    }
+  
+    .envelope-img {
+      width: 100px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .parents-heading {
+      font-size: 1.5rem;
+      padding-left: 1rem;
+    }
+  
+    .letter-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  
+    .envelope-img {
+      width: 80px;
+    }
+  }
+  
+  /* Modal Overlay */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  /* Modal Content */
+  .letter-modal {
+    background-color: #fff8ed;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    min-width: 320px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    animation: popIn 1s ease forwards;
+    transform: scale(0.8);
+    opacity: 0;
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+  
+  /* Define Pop-in Animation */
+  @keyframes popIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Modal Close Button */
+  .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  
+  /* Modal Text */
+  .modal-title {
+    font-size: 1.5rem;
+    color: #623666;
+    margin-bottom: 1rem;
+  }
+  
+  .modal-body {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    text-align: left;
+  }
+  
+  .modal-meta {
+    font-size: 0.9rem;
+    color: #777;
+    font-style: italic;
+  }
+  
+  /* Modal Responsive for Small Devices */
+  @media (max-width: 480px) {
+    .letter-modal {
+      max-height: 70vh;
+    }
+  }
+  
+  /* Read Aloud Button */
+  .read-aloud-btn {
+    background-color: #623666;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .read-aloud-btn:hover {
+    background-color: #4e2c52;
+  }
+  

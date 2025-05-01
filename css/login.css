@@ -1,0 +1,119 @@
+/* login.css - Styles for Login Page */
+
+.login-main {
+    min-height: calc(100vh - 140px); 
+    background-color: #f7f2fc; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+  }
+  
+  .login-wrapper {
+    background-color: #fff8ed; 
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
+  
+  .login-heading {
+    margin-bottom: 20px;
+    color: #623666;
+    font-size: 1.5rem;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .login-form input {
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  .login-form button {
+    padding: 12px;
+    background-color: #623666;
+    color: #fff;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-form button:hover {
+    background-color: #4e2b57;
+  }
+  
+  .message {
+    margin-top: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  
+  .success-message {
+    color: green;
+  }
+  
+  .error-message {
+    color: red;
+  }
+  /* Icon inside password field */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .password-field input {
+    flex: 1;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 12px;
+    color: #623666;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  @media (max-width: 600px) {
+    .toggle-password {
+      font-size: 0.8rem; 
+      right: 10px; 
+    }
+  }
+  @media (max-width: 600px) {
+    .login-container {
+      max-width: 90%; 
+      padding: 20px; 
+    }
+  }
+  @media (max-width: 600px) {
+    .toggle-password {
+      font-size: 0.8rem;
+      right: 10px;
+    }
+  
+    .login-container {
+      max-width: 90%;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+  }
+  @media (max-width: 600px) {
+    .login-container {
+      max-width: 85%;
+      padding: 20px;
+    }
+  }
+  
+  

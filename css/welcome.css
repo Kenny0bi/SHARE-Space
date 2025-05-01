@@ -1,0 +1,65 @@
+/* Background for the whole welcome page */
+#welcome-section {
+    background-color: #f9effc; 
+    min-height: calc(100vh - 120px);
+    padding: 5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  
+  /* Decorative floating envelope */
+  .decorative-envelope {
+    width: 4rem;
+    position: absolute;
+    top: -2%;
+    left: -2%;
+    animation: float 2s ease-in-out infinite;
+    z-index: 2;
+    transform: rotate(-15deg);
+  }
+  
+  /* Welcome message box */
+  .intro-box {
+    position: relative;
+    max-width: 40rem;
+    background-color: #18ceb3; 
+    padding: 2rem 2rem;
+    border-radius: 3rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Avenir', Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #0b0101;
+    text-align: left;
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); 
+  }
+  
+  .intro-box p {
+    margin-bottom: 1.5rem;
+  }
+  
+  .intro-box em {
+    font-style: italic;
+    color: #222; 
+    font-weight: 500;
+  }
+  
+  .intro-box strong {
+    color: #1b1b1b;
+    font-weight: 600;
+  }
+  
+  .intro-box .closing {
+    margin-top: 2.5rem;
+    font-size: 1.1rem;
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0) rotate(-15deg); }
+    50% { transform: translateY(-6px) rotate(-15deg); }
+    100% { transform: translateY(0) rotate(-15deg); }
+  }
+  
+  

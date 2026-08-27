@@ -99,7 +99,8 @@
         <label for="letter">Your Letter</label>
         <textarea id="letter" name="letter" placeholder="Write your message here... No limit — as much as your heart wants.
         " required></textarea>
-        
+        <button type="button" id="expandBtn" class="expand-textarea-button" onclick="expandTextarea()">Expand Writing Area</button>
+
 
       
         <div class="consent-wrapper">
@@ -331,13 +332,6 @@
         }
       });
   
-      document.querySelectorAll('.sample-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const type = button.getAttribute('data-type');
-          showSampleLetter(type);
-        });
-      });
-  
       document.getElementById('toggleSampleLettersLink').addEventListener('click', (e) => {
         e.preventDefault();
         const sampleSection = document.getElementById('sampleLetters');
@@ -355,12 +349,11 @@
         button.textContent = "Expand Writing Area";
       } else {
         textarea.classList.add("expanded");
-        button.textContent = "🗙 Collapse Writing Area";
+        button.textContent = "Collapse Writing Area";
       }
     };
   </script>
   
-  <script src="js/submit.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     emailjs.init("nspX0erHRXrg15RxT");

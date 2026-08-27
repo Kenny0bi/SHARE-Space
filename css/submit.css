@@ -127,6 +127,28 @@
   .letter-form textarea {
     height: 150px;
     resize: vertical;
+    transition: height 0.3s ease;
+  }
+
+  .letter-form textarea.expanded {
+    height: 400px;
+  }
+
+  .expand-textarea-button {
+    background: none;
+    border: 1px solid #623666;
+    color: #623666;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-top: -0.5rem;
+  }
+
+  .expand-textarea-button:hover {
+    background-color: #623666;
+    color: white;
   }
   
   /* Submit Button */

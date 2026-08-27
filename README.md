@@ -1,81 +1,79 @@
-# SHARE Space Website – Onboarding & Maintenance Guide
+# SHARE Space
 
-Welcome to the SHARE Space project! This guide will help you understand how to maintain, update, and build on this website. Whether you're fixing a bug or adding a feature, everything you need to know is right here.
+Stories, Hope, and Real Experiences. A digital storytelling platform I built for
+the Autism Program at Boston Medical Center, where parents, siblings, autistic
+individuals, caregivers, and allies can submit letters and read letters from
+others who understand what they're living through. Every letter gets reviewed
+before it goes live, categories keep things organized by who's reading, and a
+text to speech feature reads any letter aloud, since not everyone processes a
+wall of text the same way.
 
----
+This is a real, deployed site for a real hospital program, not a demo. The
+Firebase project backing it is live.
 
-## What is SHARE Space?
+## What I found and fixed in this pass
 
-SHARE Space stands for **Stories, Hope, and Real Experiences** — a digital storytelling platform created for the Autism Program at Boston Medical Center.
+**A dead script reference.** `submit.html` loaded `js/submit.js`, a file that
+doesn't exist anywhere in this repository and never did in any commit I could
+find. The browser would 404 on it silently, no visible error, just a request
+that goes nowhere. Removed the reference.
 
-It allows individuals in the autism community to:
+**A half built feature.** The "Expand Writing Area" function already existed
+in `submit.html`'s JavaScript, complete with the logic to toggle a CSS class
+and swap the button text, but the button itself was never added to the form,
+and the `.expanded` CSS class it depended on was never defined. The letter
+textarea told people "no limit, write as much as your heart wants" while
+giving them a fixed 150px box with no way to make it bigger except manually
+dragging the resize handle, which most people don't know is there. Added the
+button and the CSS rule so the feature that was already written actually
+works.
 
-- 📨 Submit heartfelt letters (anonymously or with names)  
-- 📚 Read categorized and approved letters (Parents, Siblings, Autistic Individuals, Caregivers, Allies)  
-- 🧠 Access accessibility features like **"Read Aloud"**  
-- 🔐 Manage content through a secure **Admin Dashboard**
+**Dead code and orphaned files.** A `.sample-btn` event listener that matched
+zero elements on the page (the actual buttons use a different class,
+`sample-letter-button`, and already work through inline `onclick` handlers,
+so this listener never did anything). An empty, unreferenced `style.css`. A
+`strangers.css` that nothing links to, since the page using that category was
+renamed to `allies.html` and its stylesheet renamed to `allies.css` without
+the old file being cleaned up. All removed.
 
----
+**A few stray emoji in user facing alerts.** "Admin verified", "You are not
+authorized", "You have been logged out due to inactivity", cleaned up to read
+as plain, professional system messages.
 
-## Getting Started
+Nothing here needed a redesign. The actual architecture, Firebase Auth for
+admin login, Realtime Database for letters, a proper security rules setup
+that only exposes approved letters publicly, is sound. These were small,
+real gaps between what the code implied it could do and what it actually did.
 
-### 1 Folder Structure Overview
+## Key features
 
-```
-SHARE-SPACE/
-├── index.html
-├── read.html
-├── submit.html
-├── login.html
-├── admin.html
-├── parents.html
-├── siblings.html
-├── autistic.html
-├── caregivers.html
-├── allies.html
-│
-├── css/
-│   ├── global.css
-│   ├── header.css
-│   ├── footer.css
-│   ├── tabs.css
-│   ├── login.css
-│   ├── admin.css
-│   ├── read.css
-│   ├── submit.css
-│   ├── parents.css
-│   ├── siblings.css
-│   ├── autistic.css
-│   ├── caregivers.css
-│   └── strangers.css
-│
-├── images/
-│   ├── autismlogo.png
-│   ├── envelope-icon.png
-│   ├── himg1.png
-│   ├── himg3.png
-│   └── (uploaded letter images)
-│
-├── scripts/
-│   └── (optional: external JS if refactored)
-│
-└── firebase/
-    └── firebaseConfig.js (or inline in HTML)
-```
+**`read.html`**: five identity based categories as clickable cards, leading
+to `parents.html`, `siblings.html`, `autistic.html`, `caregivers.html`, and
+`allies.html`. Each category page pulls only its own approved letters from
+Firebase and offers the Read Aloud button, built on the browser's native
+Web Speech API, no external service, no API key, just `SpeechSynthesisUtterance`
+with a preference for a female voice if the browser has one available, and a
+pause and resume toggle rather than only play and stop.
 
----
+**`submit.html`**: category selection, optional name and email, a title and
+the letter itself, a required consent checkbox, and floating prompt bubbles
+("What made you smile this week?", "What helps you feel safe?") for anyone
+staring at a blank page. Two sample letters ship inline for inspiration.
+Submissions save to Firebase with `approved: false` and stay invisible to
+the public until an admin reviews them, and an EmailJS notification fires to
+the admin team the moment a new letter comes in.
 
-### 2 Firebase Setup
+**`login.html`** and **`admin.html`**: Firebase email and password auth,
+gated by an explicit admin allowlist in the database (a valid login isn't
+enough on its own, the user's UID also has to exist under the `admins` node),
+a dashboard that separates pending letters from approved ones, checkbox based
+bulk approve and bulk delete, and an automatic logout after five minutes of
+no mouse movement, keystrokes, or clicks.
 
-SHARE Space uses:
+## Firebase setup
 
-- 🔐 **Firebase Authentication**  
-- 📂 **Firebase Realtime Database**  
-- 🔒 **Firebase Rules**
-
-#### 📜 Firebase Rules
-
-Paste this into your Firebase Realtime Database "Rules" tab:
+This project uses Firebase Authentication, the Realtime Database, and
+Firebase Rules. Paste this into the Realtime Database's Rules tab:
 
 ```json
 {
@@ -95,11 +93,9 @@ Paste this into your Firebase Realtime Database "Rules" tab:
 }
 ```
 
----
-
-### Giving Admin Access
-
-Add a new admin UID to your Firebase Database like this:
+Anyone can read a letter that's marked approved. Only an admin (someone whose
+UID exists under the `admins` node) can read unapproved letters or write to
+the database directly. Give someone admin access by adding their UID:
 
 ```json
 "admins": {
@@ -107,197 +103,75 @@ Add a new admin UID to your Firebase Database like this:
 }
 ```
 
->  You can find the UID under the Firebase Authentication panel after creating a new user.
+Find a user's UID under the Firebase Authentication panel after they've
+created an account.
 
----
+## Running this locally
 
-##  Key Features & Pages
+There's no build step. Open `index.html` (or any page) directly in a browser,
+or serve the folder with anything that speaks static files, `python3 -m
+http.server` works fine. Firebase features work as-is since each page's
+config is inline, no environment setup needed to view the site. Refresh after
+any change.
 
-### `/read.html`
+## Deploying
 
-- Displays 5 identity-based categories as clickable cards  
-- Leads to pages like `parents.html`, `siblings.html`, etc.
-
-### `/submit.html`
-
-- Users submit a letter with category, name (optional), and consent  
-- Floating prompts offer encouragement  
-- Submissions are hidden until approved
-
-### `/login.html`
-
-- Admins sign in using email/password  
-- Redirects to admin dashboard upon success
-
-### `/admin.html`
-
-- Admin-only dashboard protected with Firebase auth  
-- Toggle between `Pending` and `Approved` letters  
-- Bulk approve/delete with checkboxes  
-- Auto-logout after 5 minutes of inactivity
-
----
-
-##  Troubleshooting Guide
-
-| Problem                 | Solution                                                                 |
-|-------------------------|--------------------------------------------------------------------------|
-| Modal not opening       | Ensure modal HTML exists and `showLetterModal()` is properly defined     |
-| Letters not displaying  | Check Firebase rules and confirm `approved: true` exists                 |
-| Admin login not working | Check Firebase config and ensure credentials are valid in Auth panel     |
-| Blank admin dashboard   | Ensure the user's UID is listed under the `admins` node in the database  |
-
----
-
-
-##  Running Locally
-
-To test the site on your local machine:
-
-1. Open `index.html` or any HTML file directly in your browser.
-2. If you make changes, simply refresh the page to see updates.
-3. Firebase features will work as long as your Firebase config is correctly included in the HTML.
-
----
-
-##  Firebase Config (Example)
-
-Each HTML file includes a Firebase configuration block. Here’s a sample:
-
-```js
-// Inside <script type="module">
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-app.firebaseapp.com",
-  databaseURL: "https://your-app-default-rtdb.firebaseio.com",
-  projectId: "your-app",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "your-messaging-id",
-  appId: "your-app-id"
-};
+```bash
+npm install -g firebase-tools
+firebase login
+firebase deploy
 ```
 
----
+Test locally before deploying. Firebase Hosting serves whatever's currently
+committed.
 
-##  Live Demo
+## Troubleshooting
 
-If the site is deployed, include a link here:
+| Problem | Likely cause |
+|---|---|
+| Modal not opening | The modal's HTML container is missing, or `showLetterModal()` isn't wired to the right element |
+| Letters not displaying | Check the Realtime Database directly, confirm `approved: true` is actually set on the letter |
+| Admin login not working | Confirm the Firebase config block matches the project, and the account exists under Authentication |
+| Blank admin dashboard | The logged in user's UID isn't listed under the `admins` node in the database |
+| Styling looks off on one page | Check that page's specific stylesheet (`parents.css`, `siblings.css`, etc.), each category page has its own |
 
-[Visit SHARE Space Site](https://bmcautismfriendly.github.io/SHARE-Space/)
+## Notes for whoever maintains this next
 
----
+Test changes on a local copy before touching production. Keep the tone
+gentle and accessible, this is for families in a hard moment, not a generic
+form. Only approve letters that are respectful and genuine. Don't change the
+Firebase rules unless you're confident in exactly what they do, they're the
+only thing standing between "approved letters are public" and "everything in
+the database is public." Don't rename or remove a category without checking
+every page that references it, `submit.html`'s dropdown, the matching
+`category` value stored in Firebase, and the corresponding `approved*`
+section in `admin.html` all have to agree, which is exactly the kind of
+mismatch that produced the orphaned `strangers.css` this pass cleaned up.
 
-##  Admin Workflow Notes
+## Glossary
 
-- Admins are **notified automatically** when new letters are submitted.
-- It is recommended to still **check the admin dashboard regularly** to review and approve pending letters.
+- **UID**: the unique ID Firebase assigns to an authenticated user, used to
+  check admin access.
+- **Modal**: the popup that shows a full letter when you click an envelope.
+- **Firebase**: the backend platform powering authentication and the letter
+  database, no separate server to run.
+- **`.read` rule / `.write` rule**: Firebase Realtime Database rules that
+  control who can view or modify data, enforced server side, not something a
+  user can bypass from the browser.
 
----
+## Wishlist
 
-##  Notes for Future Interns
+Letting people attach an image to their letter (the upload logic already
+exists in `submit.html`'s JavaScript, Firebase Storage handling and file type
+and size validation are all written, but there's no file input in the form
+yet for someone to actually pick a file). An analytics view for admins (most
+read letters, submission volume by category over time). Multi language
+support. Better mobile layout. More voice and speed control on Read Aloud.
 
-###  Hey there,
+## Live site
 
-Thank you for stepping in to continue this meaningful work. Here are some helpful tips to guide your journey with clarity and care.
+[bmcautismfriendly.github.io/SHARE-Space](https://bmcautismfriendly.github.io/SHARE-Space/)
 
-####  What To Do
+## Contact
 
-- Test changes on a local/dev copy before updating production  
-- Keep tone and design gentle, accessible, and welcoming  
-- Only approve respectful, thoughtful letters  
-- Use the floating prompts to guide users  
-- Take pride in small improvements — they matter  
-
-####  What Not To Do
-
-- Don’t change Firebase rules unless you're confident in what you're doing  
-- Don’t rename or delete categories without full team discussion  
-- Don’t push changes without notifying others on the team  
-
----
-
----
-
-###  Making Edits to the Website
-
-To make changes, you can:
-
-1. Open the repository in VS Code or your preferred code editor.
-2. Navigate to the `html` or `css` files you want to change.
-3. Make changes and preview them locally if possible.
-4. Only update the `firebase rules` if you're confident in what you're doing.
-5. Push your changes or upload via GitHub.
-
->  If you're unsure, reach out (see email below)
-
----
-
-###  Deploying the Site
-
-If you're using Firebase Hosting:
-
-1. Install Firebase CLI (only once):
-   ```bash
-   npm install -g firebase-tools
-   ```
-
-2. Login to Firebase:
-   ```bash
-   firebase login
-   ```
-
-3. Deploy the site:
-   ```bash
-   firebase deploy
-   ```
-
->  Always test your changes locally before deploying!
-
----
-
-###  Glossary
-
-- **UID**: Unique ID used to identify an admin in Firebase.
-- **Modal**: A popup window on the screen (e.g., letter preview).
-- **Firebase**: A backend platform that powers this website's login and data.
-- **.read rule**: Firebase rule that controls who can view data.
-- **.write rule**: Firebase rule that controls who can submit or change data.
-
----
-
-###  Admin Login Behavior
-
-- Admins are required to log in with their email and password.
-- After 5 minutes of inactivity, they will be automatically logged out for security reasons.
-- If you’re logged out unexpectedly, try refreshing the page or logging in again.
-
----
-
-###  Where to Check if Something Isn't Working
-
-- **Letters not showing**: Check Firebase Database – is `approved: true` set?
-- **Login not working**: Confirm the user is listed under Firebase > Authentication
-- **Styling broken?**: Open the correct `.css` file (e.g., `parents.css`) and look for a typo
-- **Modal not opening**: Make sure the `<div class="modal">` exists in the HTML and script is linked
-
----
-
-
-##  Useful Link
-
-- [Firebase Console](https://console.firebase.google.com/)    
-
----
-
-##  Future Wishlist
-
-- Allow users to upload images with their letters  
-- Add an analytics dashboard (e.g., most read letters, submission volume by category)  
-- Build multi-language support  
-- Improve mobile UI responsiveness  
-- Enhance Read Aloud (voice options, speed controls)
-
----
-
-_If all fails and you need help with anything, please reach out to me - obidelek19@gmail.com. Goodluck!_
-
+obidelek19@gmail.com
